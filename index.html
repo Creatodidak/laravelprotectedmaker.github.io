@@ -1,33 +1,42 @@
-<?php
-function extractStrings($input) {
-    preg_match_all("/'([^']+)'/", $input, $matches);
-    $result = implode("', '", $matches[1]);
-    return $result;
-}
-
-$inputText = "";
-$outputText = "";
-
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $inputText = $_POST["inputTextArea"];
-    $outputText = extractStrings($inputText);
-}
-?>
-
 <!DOCTYPE html>
 <html>
 <head>
     <title>String Extraction</title>
+    <script>
+        function extractStrings(input) {
+            var matches = input.match(/'([^']+)'/g);
+            if (matches) {
+                var result = matches.map(function(match) {
+                    return match;
+                }).join(", ");
+                return result;
+            }
+            return "";
+        }
+
+        function removeBelumAda(input) {
+            return input.replace(/'BELUM ADA', /g, "");
+        }
+
+        function extractAndDisplay() {
+            var inputTextArea = document.getElementById("inputTextArea");
+            var outputTextArea = document.getElementById("outputTextArea");
+
+            var inputText = inputTextArea.value;
+            var extractedStrings = extractStrings(inputText);
+            var cleanedStrings = removeBelumAda(extractedStrings);
+
+            outputTextArea.value = "protected $fillable = ["+cleanedStrings.replace(/, 'BELUM ADA'/g, "")+"];";
+        }
+    </script>
 </head>
-<body>
-    <h2>String Extraction</h2>
-    <form method="post" action="/">
-        <label for="inputTextArea">Input Text:</label><br>
-        <textarea name="inputTextArea" rows="5" cols="40"><?php echo $inputText; ?></textarea><br>
-        <button type="submit">Extract Strings</button>
-    </form>
-    <br>
-    <label for="outputTextArea">Output Text:</label><br>
-    <textarea name="outputTextArea" rows="5" cols="40"><?php echo $outputText; ?></textarea>
+<body style="background-color: black; color: white;">
+    <center>
+    <h2>LARAVEL MODEL</h2><br><br>
+    <textarea id="inputTextArea" rows="10" style="width: 90%; background-color: black; color: greenyellow; padding: 10px; font-size: 20px; text-decoration: none;" spellcheck="false"></textarea><br><br><br>
+    <button type="button" onclick="extractAndDisplay()" style="background: greenyellow; color: black; height: 50px; width: 150px;">EXECUTE</button>
+    <br><br><br>
+    <textarea id="outputTextArea" rows="10" style="width: 90%; background-color: black; color: greenyellow; padding: 10px; font-size: 20px; text-decoration: none;" spellcheck="false" readonly></textarea>
+</center>
 </body>
 </html>
