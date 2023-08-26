@@ -21,7 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 <body>
     <h2>String Extraction</h2>
-    <form method="post">
+    <form method="post" action="/">
         <label for="inputTextArea">Input Text:</label><br>
         <textarea name="inputTextArea" rows="5" cols="40"><?php echo $inputText; ?></textarea><br>
         <button type="submit">Extract Strings</button>
